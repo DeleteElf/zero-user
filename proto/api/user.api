@@ -1,0 +1,63 @@
+syntax = "v1"
+
+info (
+	title:   "website grpc demo"
+	desc:    "website grpc demo desc"
+	author:  "DeleteElf"
+	email:   "deleteelf@gmail.com"
+	version: "1.0"
+)
+
+type IdRequest {
+	Id string `path:"id"` //设置请求的格式要求
+}
+
+type UserLoginRequest {
+	Name     string `form:"name"` //设置请求的格式要求
+	Password string `form:"pwd"` //设置请求的格式要求
+}
+
+type LoginRequest {
+	Account  string `json:"account"` //设置请求的格式要求
+	Password string `json:"pwd"` //设置请求的格式要求
+}
+
+type Response {
+	Code    string `json:"code"`
+	Message string `json:"message"` //设置应答的格式
+	Result  string `json:"result"`
+}
+
+@server (
+	//       prefix:  /user //用来增加一级目录
+	group:   user //用来生成分组目录
+	timeout: 2s
+)
+//定义好api后，使用 goctl api go -api user.api -dir . 自动生成代码
+service user-api {
+	@doc "登录"
+	@handler LoginHandler
+	post /login (LoginRequest) returns (Response)
+
+	@doc "登录"
+	@handler LoginHandler2
+	get /login2 (UserLoginRequest) returns (Response)
+}
+
+@server (
+	prefix:     /user
+	middleware: AuthInterceptor
+	group:      user //用来生成分组目录
+	timeout:    2s
+)
+//定义好api后，使用 goctl api go -api user.api -dir . 自动生成代码
+service user-api {
+	@doc "登出"
+	@handler LogoutHandler
+	get /logout returns (Response)
+
+	@doc "获取用户信息"
+	@handler UserInfoHandler
+	get /info returns (Response)
+}
+

@@ -1,0 +1,47 @@
+//参考：https://protobuf.dev/programming-guides/proto3/
+//grpc:https://grpc.io/docs/what-is-grpc/introduction/
+syntax = "proto3";
+
+package user.new0.com;
+option go_package="./rpchandles/user";
+
+message LoginRequest {
+  string Account = 1;
+  string Password = 2;
+}
+
+message RegisterRequest {
+  string Account = 1;
+  string Password = 2;
+  string Telephone =3;
+  string Sex=4;
+  string Age=5;
+  string Address=6;
+}
+
+message ChangePwdRequest {
+  string UserId = 1;
+  string OldPwd=2;
+  string Pwd=3;
+  string RePwd=4;
+}
+
+message IdRequest {
+  string Id = 1;
+}
+
+
+message Response{
+  string Code=1;    //代码
+  string Message=2; //消息内容
+  string Result=3; //数据存放
+}
+
+service UserService {
+  rpc Login(LoginRequest) returns(Response);
+  rpc Logout(IdRequest) returns(Response);
+  rpc Register(RegisterRequest) returns(Response);
+  rpc ChangePwd(ChangePwdRequest) returns(Response);
+  rpc UnRegister(IdRequest) returns(Response);
+  rpc UserInfo(IdRequest) returns(Response);
+}

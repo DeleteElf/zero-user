@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package character.new0.com;
+option go_package="./rpchandles/character";
+
+message IdRequest {
+  string Id = 1;
+}
+message Response{
+  string Code=1;    //代码
+  string Message=2; //消息内容
+  string Result=3; //数据存放
+}
+
+service CharacterService{
+  rpc CharacterInfo(IdRequest) returns(Response);
+}

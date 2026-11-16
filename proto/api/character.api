@@ -1,0 +1,32 @@
+syntax = "v1"
+
+info (
+	title:   "website grpc demo"
+	desc:    "website grpc demo desc"
+	author:  "DeleteElf"
+	email:   "deleteelf@gmail.com"
+	version: "1.0"
+)
+
+type IdRequest {
+	Id string `path:"id"` //设置请求的格式要求
+}
+
+type Response {
+	Code    string `json:"code"`
+	Message string `json:"message"` //设置应答的格式
+	Result  string `json:"result"`
+}
+
+@server (
+	prefix:     /char //用来增加一级目录
+	middleware: AuthInterceptor
+	group:      character
+	timeout:    2s
+)
+service character-api {
+	@doc "获取角色信息"
+	@handler CharacterInfoHandler
+	get /info/:id (IdRequest) returns (Response)
+}
+
