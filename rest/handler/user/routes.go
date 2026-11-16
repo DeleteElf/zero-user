@@ -9,11 +9,14 @@ import (
 	"slices"
 	"time"
 
+	"github.com/DeleteElf/zero-user/rest/logic"
+	"github.com/DeleteElf/zero-user/types"
 	"github.com/DeleteElf/zero-web-core/service"
 	"github.com/zeromicro/go-zero/rest"
+	"github.com/zeromicro/go-zero/rest/httpx"
 )
 
-func RegisterHandlers(server *rest.Server, serverCtx *service.ServiceContext[service.RestConf]) {
+func RegisterHandlers[T service.Config](server *rest.Server, serverCtx *service.ServiceContext[T]) {
 	server.AddRoutes(
 		[]rest.Route{
 			{
@@ -53,4 +56,70 @@ func RegisterHandlers(server *rest.Server, serverCtx *service.ServiceContext[ser
 		rest.WithPrefix("/user"),
 		rest.WithTimeout(2000*time.Millisecond),
 	)
+}
+
+// 登录
+func LoginHandler[T service.Config](svcCtx *service.ServiceContext[T]) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		var req types.LoginRequest
+		if err := httpx.Parse(r, &req); err != nil {
+			httpx.ErrorCtx(r.Context(), w, err)
+			return
+		}
+
+		l := logic.NewLoginLogic(r.Context(), svcCtx)
+		resp, err := l.Login(&req)
+		if err != nil {
+			httpx.ErrorCtx(r.Context(), w, err)
+		} else {
+			httpx.OkJsonCtx(r.Context(), w, resp)
+		}
+	}
+}
+
+// 登录
+func LoginHandler2Handler[T service.Config](svcCtx *service.ServiceContext[T]) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		var req types.UserLoginRequest
+		if err := httpx.Parse(r, &req); err != nil {
+			httpx.ErrorCtx(r.Context(), w, err)
+			return
+		}
+
+		l := logic.NewLoginLogic(r.Context(), svcCtx)
+		resp, err := l.LoginHandler2(&req)
+		if err != nil {
+			httpx.ErrorCtx(r.Context(), w, err)
+		} else {
+			httpx.OkJsonCtx(r.Context(), w, resp)
+		}
+	}
+}
+
+
+// 登出
+func LogoutHandler[T service.Config](svcCtx *service.ServiceContext[T]) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		l := logic.NewLoginLogic(r.Context(), svcCtx)
+		resp, err := l.Logout()
+		if err != nil {
+			httpx.ErrorCtx(r.Context(), w, err)
+		} else {
+			httpx.OkJsonCtx(r.Context(), w, resp)
+		}
+	}
+}
+
+
+// 获取用户信息
+func UserInfoHandler[T service.Config](svcCtx *service.ServiceContext[T]) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		l := logic.NewLoginLogic(r.Context(), svcCtx)
+		resp, err := l.UserInfo()
+		if err != nil {
+			httpx.ErrorCtx(r.Context(), w, err)
+		} else {
+			httpx.OkJsonCtx(r.Context(), w, resp)
+		}
+	}
 }

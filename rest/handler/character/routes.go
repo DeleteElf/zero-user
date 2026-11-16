@@ -9,11 +9,14 @@ import (
 	"slices"
 	"time"
 
+	"github.com/DeleteElf/zero-user/rest/logic"
+	"github.com/DeleteElf/zero-user/types"
 	"github.com/DeleteElf/zero-web-core/service"
 	"github.com/zeromicro/go-zero/rest"
+	"github.com/zeromicro/go-zero/rest/httpx"
 )
 
-func RegisterHandlers(server *rest.Server, serverCtx *service.ServiceContext[service.RestConf]) {
+func RegisterHandlers[T service.Config](server *rest.Server, serverCtx *service.ServiceContext[T]) {
 	server.AddRoutes(
 		rest.WithMiddlewares(
 			slices.Collect(maps.Values(serverCtx.Middlewares)),
@@ -29,4 +32,23 @@ func RegisterHandlers(server *rest.Server, serverCtx *service.ServiceContext[ser
 		rest.WithPrefix("/char"),
 		rest.WithTimeout(2000*time.Millisecond),
 	)
+}
+
+// 获取角色信息
+func CharacterInfoHandler[T service.Config](svcCtx *service.ServiceContext[T]) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		var req types.IdRequest
+		if err := httpx.Parse(r, &req); err != nil {
+			httpx.ErrorCtx(r.Context(), w, err)
+			return
+		}
+
+		l := logic.NewCharacterLogic(r.Context(), svcCtx)
+		resp, err := l.Info(&req)
+		if err != nil {
+			httpx.ErrorCtx(r.Context(), w, err)
+		} else {
+			httpx.OkJsonCtx(r.Context(), w, resp)
+		}
+	}
 }
