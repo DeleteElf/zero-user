@@ -10,6 +10,7 @@ goctl rpc protoc --go_out=. --go-grpc_out=. --zrpc_out=. ./etcd/service.proto
 #如果需要生成的方法在一个文件里，则使用
 # 安装插件
 go install github.com/zeromicro/goctl-go-compact@latest
+go install github.com/zeromicro/goctl-go-compact@v1.1.1
 # 使用（替换原来的 goctl api go）
 goctl-go-compact api go -api user.api -dir .
 ```
