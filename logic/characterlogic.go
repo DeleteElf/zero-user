@@ -26,5 +26,5 @@ func NewCharacterLogic(ctx context.Context, svcCtx *service.ServiceContext[servi
 func (l *CharacterLogic) Info(in *character.IdRequest) (*character.Response, error) {
 	// todo: add your logic here and delete this line
 	message := fmt.Sprintf("获取角色编号[%s]的角色信息成功", in.Id)
-	return &character.Response{Code: "0", Message: message, Result: "from etcd service 8080"}, nil
+	return &character.Response{Code: "0", Message: message, Result: "from etcd server 8080"}, nil
 }
