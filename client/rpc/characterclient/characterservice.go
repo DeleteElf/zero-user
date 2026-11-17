@@ -33,5 +33,5 @@ func NewCharacterService(cli zrpc.Client) CharacterService {
 
 func (m *defaultCharacterService) CharacterInfo(ctx context.Context, in *IdRequest, opts ...grpc.CallOption) (*Response, error) {
 	client := character.NewCharacterServiceClient(m.cli.Conn())
-	return client.CharacterInfo(ctx, in, opts...)
+	return client.RoleInfo(ctx, in, opts...)
 }
