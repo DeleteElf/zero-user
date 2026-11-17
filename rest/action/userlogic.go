@@ -2,7 +2,6 @@ package action
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"strconv"
 
@@ -12,7 +11,6 @@ import (
 	"github.com/DeleteElf/zero-user/types"
 	"github.com/DeleteElf/zero-web-core/base"
 	"github.com/DeleteElf/zero-web-core/ctx"
-	"github.com/deleteelf/zero-core/ado"
 	"github.com/deleteelf/zero-core/entities"
 	"github.com/deleteelf/zero-core/utils/httphelper"
 	"github.com/deleteelf/zero-core/utils/loghelper"
@@ -126,19 +124,10 @@ func (l *UserAction[T]) UserInfo() (resp *base.Response, err error) {
 		userInfo, _ := userRpcService.UserInfo(l.ctx, &user.IdRequest{
 			Id: userId,
 		})
-
-		dataTable := ado.DataTable{Rows: []map[string]interface{}{}}
-		err1 := json.Unmarshal([]byte(userInfo.Result), &dataTable.Rows)
-		if err1 != nil {
-			return &base.Response{
-				Code:    "-1",
-				Message: "数据传输错误！",
-			}, nil
-		}
 		return &base.Response{
 			Code:    userInfo.Code,
 			Message: userInfo.Message,
-			Result:  dataTable.Rows,
+			Result:  userInfo.Result,
 		}, nil
 	}
 	svr := business.NewUserService(l.svcCtx.Config.GetDbConfig())
