@@ -9,13 +9,13 @@ info (
 )
 
 type IdRequest {
-	Id string `path:"id"` //设置请求的格式要求
+	Id string `path:"id"` //IdRequest生成后，需要从types.go里删除，我们全局只需要一个，引用base.
 }
 
 type Response {
-	Code    string `json:"code"`
+	Code    string `json:"code"` //Response生成后，需要从types.go里删除，我们全局只需要一个，引用base.
 	Message string `json:"message"` //设置应答的格式
-	Result  string `json:"result"`
+	Result  string `json:"result"`  //生成时，是不支持any类型的
 }
 
 @server (
@@ -26,7 +26,11 @@ type Response {
 )
 service character-api {
 	@doc "获取角色信息"
-	@handler CharacterInfoHandler
-	get /info/:id (IdRequest) returns (Response)
+	@handler RoleInfoHandler
+	get /role/info/:id (IdRequest) returns (Response)
+
+    @doc "获取权限信息"
+    @handler AuthInfoHandler
+    get /auth/info/:id (IdRequest) returns (Response)
 }
 

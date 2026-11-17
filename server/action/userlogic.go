@@ -1,14 +1,13 @@
-package logic
+package action
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"strconv"
 
+	"github.com/DeleteElf/zero-user/business"
 	"github.com/DeleteElf/zero-user/rpchandles/user"
-	"github.com/DeleteElf/zero-web-core/service"
-	"github.com/deleteelf/zero-core/ado"
+	"github.com/DeleteElf/zero-web-core/ctx"
 	"github.com/deleteelf/zero-core/entities"
 	"github.com/deleteelf/zero-core/utils/httphelper"
 	"github.com/deleteelf/zero-core/utils/loghelper"
@@ -18,11 +17,11 @@ import (
 
 type UserLogic struct {
 	ctx    context.Context
-	svcCtx *service.ServiceContext[service.RpcServerConf]
+	svcCtx *ctx.ServiceContext[ctx.RpcServerConf]
 	logx.Logger
 }
 
-func NewUserLogic(ctx context.Context, svcCtx *service.ServiceContext[service.RpcServerConf]) *UserLogic {
+func NewUserLogic(ctx context.Context, svcCtx *ctx.ServiceContext[ctx.RpcServerConf]) *UserLogic {
 	return &UserLogic{
 		ctx:    ctx,
 		svcCtx: svcCtx,
@@ -31,21 +30,13 @@ func NewUserLogic(ctx context.Context, svcCtx *service.ServiceContext[service.Rp
 }
 
 func (l *UserLogic) UserInfo(in *user.IdRequest) (*user.Response, error) {
-	dbCon := ado.CreateDbByConfig(l.svcCtx.Config.DbConfig)
-	//dbCon := dbhelper.CreateDb("host=localhost user=postgres dbname=test password=test123 port=5432 sslmode=disable", dbhelper.Postgres, logger.Info)
-	if dbCon == nil {
-		return &user.Response{Code: "-1", Message: "系统错误！！！"}, nil
-	}
-	dataTable := dbCon.QueryData(`SELECT to_char(f_create_Time,'yyyy-MM-dd HH24:mi:ss') as registered_Time,
-f_name,f_email,f_telephone,f_active
-FROM sys.t_user_info where f_id =?`, in.Id)
-
-	jsonData, err := json.Marshal(dataTable.Rows)
+	svr := business.NewUserService(l.svcCtx.Config.GetDbConfig())
+	userInfo, err := svr.GetUserInfo(in.Id)
 	if err != nil {
 		return &user.Response{Code: "-1", Message: "数据格式化失败！！！"}, nil
 	}
-	loghelper.GetDefaultLogger().Info(string(jsonData))
-	return &user.Response{Code: "0", Message: "获取成功", Result: string(jsonData)}, nil
+	loghelper.GetDefaultLogger().Info(string(userInfo))
+	return &user.Response{Code: "0", Message: "获取成功", Result: userInfo}, nil
 }
 
 func (l *UserLogic) UnRegister(in *user.IdRequest) (*user.Response, error) {
@@ -68,25 +59,16 @@ func (l *UserLogic) Logout(in *user.IdRequest) (*user.Response, error) {
 }
 
 func (l *UserLogic) Login(in *user.LoginRequest) (*user.Response, error) {
-	dbCon := ado.CreateDb("host=localhost user=postgres dbname=test password=test123 port=5432 sslmode=disable", ado.Postgres, l.svcCtx.Config.DbConfig.LogLevel)
-	if dbCon == nil {
-		return &user.Response{Code: "-1", Message: "登录时发生系统错误！！！"}, nil
-	}
+	svr := business.NewUserService(l.svcCtx.Config.GetDbConfig())
 	var userInfo []entities.UserInfo
-	//dbCon.AutoMigrate(userInfo) //修改表结构
-
-	//dbCon.SelectById(&userInfo, 1)
-
-	//md5Pwd := stringhelper.Md5(userInfo.Password)
-	//userInfo.Password = md5Pwd
-	//
-	//dbCon.Save(&userInfo)
-
-	//dataTable := dbCon.QueryData("select * from t_user_info where f_id=?", 1)
-	//jsonData, err := json.Marshal(dataTable)
-	//loghelper.GetLogManager().Info(string(jsonData))
-
-	dbCon.SelectByCondition(&userInfo, "f_account=? and f_password=? and f_active=true", in.Account, stringhelper.Md5(in.Password))
+	switch in.Type {
+	case 0:
+		userInfo, _ = svr.Login(in.Account, "", "", stringhelper.Md5(in.Password))
+	case 1:
+		userInfo, _ = svr.Login("", in.Account, "", stringhelper.Md5(in.Password))
+	case 2:
+		userInfo, _ = svr.Login("", "", in.Account, stringhelper.Md5(in.Password))
+	}
 	if len(userInfo) == 0 {
 		return &user.Response{Code: "-1", Message: "登录失败，账号或密码错误！！！"}, nil
 	}

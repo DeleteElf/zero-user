@@ -2,7 +2,7 @@
 // goctl 1.7.3
 // Source: character.proto
 
-package characterservicelogic
+package characterclient
 
 import (
 	"context"

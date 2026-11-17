@@ -9,21 +9,23 @@ info (
 )
 
 type IdRequest {
-	Id string `path:"id"` //设置请求的格式要求
-}
-
-type UserLoginRequest {
-	Name     string `form:"name"` //设置请求的格式要求
-	Password string `form:"pwd"` //设置请求的格式要求
+	Id string `path:"id"` //IdRequest生成后，需要从types.go里删除，我们全局只需要一个，引用base.
 }
 
 type LoginRequest {
-	Account  string `json:"account"` //设置请求的格式要求
-	Password string `json:"pwd"` //设置请求的格式要求
+	Account  string `json:"account" form:"account"` //设置请求的格式要求,如果需要使用用户名或邮箱，也通过此字段传输
+	Password string `json:"pwd" form:"pwd"` //设置请求的格式要求
+	Type     int    `json:"t,optional,default=0" form:"t"` //0 表示account 1表示username 2表示email
+}
+
+type ChangePwdRequest {
+	OldPwd string `json:"oldPwd" form:"oldPwd"` //旧密码
+	NewPwd string `json:"newPwd" form:"newPwd"` //新密码
+	RePwd  string `json:"rePwd" form:"rePwd"` //重复新密码
 }
 
 type Response {
-	Code    string `json:"code"`
+	Code    string `json:"code"` //Response生成后，需要从types.go里删除，我们全局只需要一个，引用base.
 	Message string `json:"message"` //设置应答的格式
 	Result  string `json:"result"`
 }
@@ -38,10 +40,6 @@ service user-api {
 	@doc "登录"
 	@handler LoginHandler
 	post /login (LoginRequest) returns (Response)
-
-	@doc "登录"
-	@handler LoginHandler2
-	get /login2 (UserLoginRequest) returns (Response)
 }
 
 @server (
@@ -58,6 +56,10 @@ service user-api {
 
 	@doc "获取用户信息"
 	@handler UserInfoHandler
-	get /info returns (Response)
+	get /info/:id (IdRequest) returns (Response)
+
+	@doc "修改用户密码"
+	@handler ChangePwdHandler
+	post /changePwd (ChangePwdRequest) returns (Response)
 }
 

@@ -13,5 +13,6 @@ message Response{
 }
 
 service CharacterService{
-  rpc CharacterInfo(IdRequest) returns(Response);
+  rpc RoleInfo(IdRequest) returns(Response);
+  rpc AuthInfo(IdRequest) returns(Response);
 }

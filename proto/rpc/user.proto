@@ -8,6 +8,7 @@ option go_package="./rpchandles/user";
 message LoginRequest {
   string Account = 1;
   string Password = 2;
+  int32 Type=3;
 }
 
 message RegisterRequest {

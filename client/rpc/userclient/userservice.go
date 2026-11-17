@@ -2,10 +2,11 @@
 // goctl 1.7.3
 // Source: user.proto
 
-package userservicelogic
+package userclient
 
 import (
 	"context"
+
 	"github.com/DeleteElf/zero-user/rpchandles/user"
 	"github.com/zeromicro/go-zero/zrpc"
 	"google.golang.org/grpc"

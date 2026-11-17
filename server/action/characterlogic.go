@@ -1,21 +1,21 @@
-package logic
+package action
 
 import (
 	"context"
 	"fmt"
 
 	"github.com/DeleteElf/zero-user/rpchandles/character"
-	"github.com/DeleteElf/zero-web-core/service"
+	"github.com/DeleteElf/zero-web-core/ctx"
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
 type CharacterLogic struct {
 	ctx    context.Context
-	svcCtx *service.ServiceContext[service.RpcServerConf]
+	svcCtx *ctx.ServiceContext[ctx.RpcServerConf]
 	logx.Logger
 }
 
-func NewCharacterLogic(ctx context.Context, svcCtx *service.ServiceContext[service.RpcServerConf]) *CharacterLogic {
+func NewCharacterLogic(ctx context.Context, svcCtx *ctx.ServiceContext[ctx.RpcServerConf]) *CharacterLogic {
 	return &CharacterLogic{
 		ctx:    ctx,
 		svcCtx: svcCtx,

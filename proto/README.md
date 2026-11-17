@@ -5,7 +5,7 @@
 #生成api模板，为防止代码被修改，一般情况下，我们会生成到一个临时目录
 goctl api go -api website.api -dir ./temp
 #生成grpc模板
-goctl rpc protoc --go_out=./temp --go-grpc_out=./temp --zrpc_out=./temp ./etcd/user.proto --multiple
+goctl rpc protoc --go_out=./temp --go-grpc_out=./temp --zrpc_out=./temp ./rpc/user.proto --multiple
 #注意
 1. 生成后，将rpchandles的内容放到项目根目录。
 2. config和svc的内容可以不要，我们使用架构的svc和config。

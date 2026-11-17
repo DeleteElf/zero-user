@@ -9,14 +9,14 @@ import (
 	"slices"
 	"time"
 
-	"github.com/DeleteElf/zero-user/rest/logic"
-	"github.com/DeleteElf/zero-user/types"
-	"github.com/DeleteElf/zero-web-core/service"
+	"github.com/DeleteElf/zero-user/rest/action"
+	"github.com/DeleteElf/zero-web-core/base"
+	"github.com/DeleteElf/zero-web-core/ctx"
 	"github.com/zeromicro/go-zero/rest"
 	"github.com/zeromicro/go-zero/rest/httpx"
 )
 
-func RegisterHandlers[T service.Config](server *rest.Server, serverCtx *service.ServiceContext[T]) {
+func RegisterHandlers[T ctx.Config](server *rest.Server, serverCtx *ctx.ServiceContext[T]) {
 	server.AddRoutes(
 		rest.WithMiddlewares(
 			slices.Collect(maps.Values(serverCtx.Middlewares)),
@@ -35,15 +35,15 @@ func RegisterHandlers[T service.Config](server *rest.Server, serverCtx *service.
 }
 
 // 获取角色信息
-func CharacterInfoHandler[T service.Config](svcCtx *service.ServiceContext[T]) http.HandlerFunc {
+func CharacterInfoHandler[T ctx.Config](svcCtx *ctx.ServiceContext[T]) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		var req types.IdRequest
+		var req base.IdRequest
 		if err := httpx.Parse(r, &req); err != nil {
 			httpx.ErrorCtx(r.Context(), w, err)
 			return
 		}
 
-		l := logic.NewCharacterLogic(r.Context(), svcCtx)
+		l := action.NewCharacterLogic(r.Context(), svcCtx)
 		resp, err := l.Info(&req)
 		if err != nil {
 			httpx.ErrorCtx(r.Context(), w, err)
