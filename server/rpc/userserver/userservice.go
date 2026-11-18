@@ -8,7 +8,7 @@ import (
 	"context"
 
 	"github.com/DeleteElf/zero-user/rpchandles/user"
-	"github.com/DeleteElf/zero-user/server/action"
+	"github.com/DeleteElf/zero-user/server/action/useraction"
 	"github.com/DeleteElf/zero-web-core/ctx"
 )
 
@@ -24,31 +24,31 @@ func NewUserService(svcCtx *ctx.ServiceContext[ctx.RpcServerConf]) *UserService 
 }
 
 func (s *UserService) Login(ctx context.Context, in *user.LoginRequest) (*user.Response, error) {
-	l :=  action.NewUserLogic(ctx, s.svcCtx)
+	l :=  useraction.NewUserLogic(ctx, s.svcCtx)
 	return l.Login(in)
 }
 
 func (s *UserService) Logout(ctx context.Context, in *user.IdRequest) (*user.Response, error) {
-	l := action.NewUserLogic(ctx, s.svcCtx)
+	l := useraction.NewUserLogic(ctx, s.svcCtx)
 	return l.Logout(in)
 }
 
 func (s *UserService) Register(ctx context.Context, in *user.RegisterRequest) (*user.Response, error) {
-	l := action.NewUserLogic(ctx, s.svcCtx)
+	l := useraction.NewUserLogic(ctx, s.svcCtx)
 	return l.Register(in)
 }
 
 func (s *UserService) ChangePwd(ctx context.Context, in *user.ChangePwdRequest) (*user.Response, error) {
-	l := action.NewUserLogic(ctx, s.svcCtx)
+	l := useraction.NewUserLogic(ctx, s.svcCtx)
 	return l.ChangePwd(in)
 }
 
 func (s *UserService) UnRegister(ctx context.Context, in *user.IdRequest) (*user.Response, error) {
-	l := action.NewUserLogic(ctx, s.svcCtx)
+	l := useraction.NewUserLogic(ctx, s.svcCtx)
 	return l.UnRegister(in)
 }
 
 func (s *UserService) UserInfo(ctx context.Context, in *user.IdRequest) (*user.Response, error) {
-	l := action.NewUserLogic(ctx, s.svcCtx)
+	l := useraction.NewUserLogic(ctx, s.svcCtx)
 	return l.UserInfo(in)
 }
