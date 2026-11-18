@@ -138,7 +138,7 @@ func (l *UserAction[T]) UserInfo() (resp *base.Response, err error) {
 			Result:  err.Error(),
 		}, nil
 	}
-	loghelper.GetDefaultLogger().Info(string(userInfo))
+	loghelper.Info(string(userInfo))
 	return &base.Response{
 		Code:    "0",
 		Message: "获取用户信息成功！！！",

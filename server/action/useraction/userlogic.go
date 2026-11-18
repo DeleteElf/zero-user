@@ -35,7 +35,7 @@ func (l *UserLogic) UserInfo(in *user.IdRequest) (*user.Response, error) {
 	if err != nil {
 		return &user.Response{Code: "-1", Message: "数据格式化失败！！！"}, nil
 	}
-	loghelper.GetDefaultLogger().Info(string(userInfo))
+	loghelper.Info(string(userInfo))
 	return &user.Response{Code: "0", Message: "获取成功", Result: userInfo}, nil
 }
 
