@@ -6,7 +6,7 @@ package types
 type LoginRequest struct {
 	Account  string `json:"account" form:"account"`        //设置请求的格式要求,如果需要使用用户名或邮箱，也通过此字段传输
 	Password string `json:"pwd" form:"pwd"`                //设置请求的格式要求
-	Type     int    `json:"t,optional,default=0" form:"t"` //0 表示account 1表示username 2表示email
+	Type     int    `json:"t,optional,default=0" form:"t,optional,default=0"` //0 表示account 1表示username 2表示email
 }
 
 type ChangePwdRequest struct {
