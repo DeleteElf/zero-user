@@ -26,8 +26,8 @@ type ChangePwdRequest {
 
 type Response {
 	Code    string `json:"code"` //Response生成后，需要从types.go里删除，我们全局只需要一个，引用base.
-	Message string `json:"message"` //设置应答的格式
-	Result  string `json:"result"`
+	Message string `json:"message,optional"` //设置应答的格式
+	Result  string `json:"result,optional"`
 }
 
 @server (
