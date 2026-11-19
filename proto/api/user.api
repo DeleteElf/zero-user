@@ -13,15 +13,15 @@ type IdRequest {
 }
 
 type LoginRequest {
-	Account  string `json:"account" form:"account"` //设置请求的格式要求,如果需要使用用户名或邮箱，也通过此字段传输
-	Password string `json:"pwd" form:"pwd"` //设置请求的格式要求
+	Account  string `json:"account,optional" form:"account,optional"` //设置请求的格式要求,如果需要使用用户名或邮箱，也通过此字段传输
+	Password string `json:"pwd,optional" form:"pwd,optional"` //因为支持两种格式，因此两种都要设置optional，后续在handler内校验非空，如果不这么做，则必须分开设置两个type，这里仅作为教学
 	Type     int    `json:"t,optional,default=0" form:"t"` //0 表示account 1表示username 2表示email
 }
 
 type ChangePwdRequest {
-	OldPwd string `json:"oldPwd" form:"oldPwd"` //旧密码
-	NewPwd string `json:"newPwd" form:"newPwd"` //新密码
-	RePwd  string `json:"rePwd" form:"rePwd"` //重复新密码
+	OldPwd string `json:"oldPwd,optional" form:"oldPwd,optional"` //旧密码
+	NewPwd string `json:"newPwd,optional" form:"newPwd,optional"` //新密码
+	RePwd  string `json:"rePwd,optional" form:"rePwd,optional"` //重复新密码
 }
 
 type Response {

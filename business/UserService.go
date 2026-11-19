@@ -31,13 +31,13 @@ func (s *UserService) GetUserInfo(userId any) ([]byte, error) {
 	return jsonhelper.ToJsonByte(dataTable.Rows)
 }
 
-func (s *UserService) Login(account, name, email, pwd string) ([]entities.UserInfo, error) {
+func (s *UserService) Login(account, telephone, email, pwd string) ([]entities.UserInfo, error) {
 	dbCon, err := ado.CreateDbByConfig(s.DbConfig)
 	if dbCon == nil {
 		return nil, err
 	}
 	var userInfo []entities.UserInfo
-	dbCon.SelectByCondition(&userInfo, "(f_account=? or f_user_name=? or f_email=?) and f_password=? and f_is_active=true",
-		account, name, email, stringhelper.Md5(pwd))
+	dbCon.SelectByCondition(&userInfo, "(f_account=? or f_telephone=? or f_email=?) and f_password=? and f_active",
+		account, telephone, email, stringhelper.Md5(pwd))
 	return userInfo, nil
 }

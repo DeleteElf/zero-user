@@ -4,6 +4,7 @@
 package userroute
 
 import (
+	"errors"
 	"maps"
 	"net/http"
 	"slices"
@@ -66,7 +67,22 @@ func LoginHandler[T ctx.Config](svcCtx *ctx.ServiceContext[T]) http.HandlerFunc 
 			httpx.ErrorCtx(r.Context(), w, err)
 			return
 		}
-
+		// ★ 手动校验必填
+		if req.Account == "" {
+			switch req.Type {
+			case 0:
+				httpx.ErrorCtx(r.Context(), w, errors.New("账号不能为空"))
+			case 1:
+				httpx.ErrorCtx(r.Context(), w, errors.New("手机号不能为空"))
+			case 2:
+				httpx.ErrorCtx(r.Context(), w, errors.New("邮箱不能为空"))
+			}
+			return
+		}
+		if req.Password == "" {
+			httpx.ErrorCtx(r.Context(), w, errors.New("密码不能为空"))
+			return
+		}
 		l := action.NewUserAction(r.Context(), svcCtx)
 		resp, err := l.Login(&req)
 		if err != nil {
@@ -112,7 +128,22 @@ func ChangePwdHandler[T ctx.Config](svcCtx *ctx.ServiceContext[T]) http.HandlerF
 			httpx.ErrorCtx(r.Context(), w, err)
 			return
 		}
-
+		if req.OldPwd == "" {
+			httpx.ErrorCtx(r.Context(), w, errors.New("旧密码不能为空"))
+			return
+		}
+		if req.NewPwd == "" {
+			httpx.ErrorCtx(r.Context(), w, errors.New("新密码不能为空"))
+			return
+		}
+		if(len(req.NewPwd)<6){
+			httpx.ErrorCtx(r.Context(), w, errors.New("新密码长度不能小于6"))
+			return
+		}
+		if req.NewPwd == req.RePwd {
+			httpx.ErrorCtx(r.Context(), w, errors.New("确认新密码与新密码不一致"))
+			return
+		}
 		l := action.NewUserAction(r.Context(), svcCtx)
 		resp, err := l.ChangePwd(&req)
 		if err != nil {
