@@ -284,7 +284,7 @@ type Response struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Code          string                 `protobuf:"bytes,1,opt,name=Code,proto3" json:"Code,omitempty"`       //代码
 	Message       string                 `protobuf:"bytes,2,opt,name=Message,proto3" json:"Message,omitempty"` //消息内容
-	Result        any                 `protobuf:"bytes,3,opt,name=Result,proto3" json:"Result,omitempty"`   //数据存放
+	Result        string                 `protobuf:"bytes,3,opt,name=Result,proto3" json:"Result,omitempty"`   //数据存放
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -333,7 +333,7 @@ func (x *Response) GetMessage() string {
 	return ""
 }
 
-func (x *Response) GetResult() any {
+func (x *Response) GetResult() string {
 	if x != nil {
 		return x.Result
 	}
