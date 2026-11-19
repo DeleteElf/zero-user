@@ -10,7 +10,6 @@ import (
 	"github.com/DeleteElf/zero-web-core/ctx"
 	"github.com/deleteelf/zero-core/entities"
 	"github.com/deleteelf/zero-core/utils/httphelper"
-	"github.com/deleteelf/zero-core/utils/loghelper"
 	"github.com/deleteelf/zero-core/utils/stringhelper"
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -35,7 +34,7 @@ func (l *UserLogic) UserInfo(in *user.IdRequest) (*user.Response, error) {
 	if err != nil {
 		return &user.Response{Code: "-1", Message: "数据格式化失败！！！"}, nil
 	}
-	loghelper.Info(string(userInfo))
+	//loghelper.Info(string(userInfo))
 	return &user.Response{Code: "0", Message: "获取成功", Result: userInfo}, nil
 }
 

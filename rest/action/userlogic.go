@@ -13,7 +13,6 @@ import (
 	"github.com/DeleteElf/zero-web-core/ctx"
 	"github.com/deleteelf/zero-core/entities"
 	"github.com/deleteelf/zero-core/utils/httphelper"
-	"github.com/deleteelf/zero-core/utils/loghelper"
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
@@ -105,7 +104,9 @@ func (l *UserAction[T]) Logout() (resp *base.Response, err error) {
 	//我们只需要在redis登出即可
 	userId := l.ctx.Value("userId")
 	token := l.ctx.Value("token")
-	message := fmt.Sprintf("用户[%s]退出登录！！！", userId)
+	svr := business.NewUserService(l.svcCtx.Config.GetDbConfig())
+	userInfo, err := svr.GetUserInfo(userId)
+	message := fmt.Sprintf("用户[%s]退出登录！！！", userInfo.Rows[0]["userName"].(string))
 	l.svcCtx.RedisClient.Del(token.(string))
 	return &base.Response{
 		Code:    "0",
@@ -138,11 +139,11 @@ func (l *UserAction[T]) UserInfo() (resp *base.Response, err error) {
 			Result:  err.Error(),
 		}, nil
 	}
-	loghelper.Info(string(userInfo))
+	//loghelper.Info(string(userInfo))
 	return &base.Response{
 		Code:    "0",
 		Message: "获取用户信息成功！！！",
-		Result:  1,
+		Result:  userInfo.Rows,
 	}, nil
 }
 
