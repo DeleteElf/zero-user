@@ -8,7 +8,6 @@ import (
 	"github.com/DeleteElf/zero-core/entities"
 	"github.com/DeleteElf/zero-core/utils/httphelper"
 	"github.com/DeleteElf/zero-core/utils/jsonhelper"
-	"github.com/DeleteElf/zero-core/utils/stringhelper"
 	"github.com/DeleteElf/zero-user/business"
 	"github.com/DeleteElf/zero-user/rpchandles/user"
 	"github.com/DeleteElf/zero-web-core/ctx"
@@ -63,11 +62,11 @@ func (l *UserLogic) Login(in *user.LoginRequest) (*user.Response, error) {
 	var userInfo []entities.UserInfo
 	switch in.Type {
 	case 0:
-		userInfo, _ = svr.Login(in.Account, "", "", stringhelper.Md5(in.Password))
+		userInfo, _ = svr.Login(in.Account, "", "", in.Password)
 	case 1:
-		userInfo, _ = svr.Login("", in.Account, "", stringhelper.Md5(in.Password))
+		userInfo, _ = svr.Login("", in.Account, "", in.Password)
 	case 2:
-		userInfo, _ = svr.Login("", "", in.Account, stringhelper.Md5(in.Password))
+		userInfo, _ = svr.Login("", "", in.Account, in.Password)
 	}
 	if len(userInfo) == 0 {
 		return &user.Response{Code: "-1", Message: "登录失败，账号或密码错误！！！"}, nil
