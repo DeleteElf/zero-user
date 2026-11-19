@@ -7,6 +7,7 @@ import (
 
 	"github.com/DeleteElf/zero-core/entities"
 	"github.com/DeleteElf/zero-core/utils/httphelper"
+	"github.com/DeleteElf/zero-core/utils/jsonhelper"
 	"github.com/DeleteElf/zero-user/business"
 	"github.com/DeleteElf/zero-user/client/rpc/userclient"
 	"github.com/DeleteElf/zero-user/rpchandles/user"
@@ -124,10 +125,11 @@ func (l *UserAction[T]) UserInfo() (resp *base.Response, err error) {
 		userInfo, _ := userRpcService.UserInfo(l.ctx, &user.IdRequest{
 			Id: userId,
 		})
+		result, _ := jsonhelper.GetJsonObject(userInfo.Result.([]byte))
 		return &base.Response{
 			Code:    userInfo.Code,
 			Message: userInfo.Message,
-			Result:  userInfo.Result,
+			Result:  result,
 		}, nil
 	}
 	svr := business.NewUserService(l.svcCtx.Config.GetDbConfig())
@@ -143,7 +145,7 @@ func (l *UserAction[T]) UserInfo() (resp *base.Response, err error) {
 	return &base.Response{
 		Code:    "0",
 		Message: "获取用户信息成功！！！",
-		Result:  userInfo.Rows,
+		Result:  userInfo.Rows[0],
 	}, nil
 }
 

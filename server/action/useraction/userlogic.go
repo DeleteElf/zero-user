@@ -7,6 +7,7 @@ import (
 
 	"github.com/DeleteElf/zero-core/entities"
 	"github.com/DeleteElf/zero-core/utils/httphelper"
+	"github.com/DeleteElf/zero-core/utils/jsonhelper"
 	"github.com/DeleteElf/zero-core/utils/stringhelper"
 	"github.com/DeleteElf/zero-user/business"
 	"github.com/DeleteElf/zero-user/rpchandles/user"
@@ -34,8 +35,8 @@ func (l *UserLogic) UserInfo(in *user.IdRequest) (*user.Response, error) {
 	if err != nil {
 		return &user.Response{Code: "-1", Message: "数据格式化失败！！！"}, nil
 	}
-	//loghelper.Info(string(userInfo))
-	return &user.Response{Code: "0", Message: "获取成功", Result: userInfo}, nil
+	result, _ := jsonhelper.ToJsonString(userInfo.Rows[0])
+	return &user.Response{Code: "0", Message: "获取成功", Result: result}, nil
 }
 
 func (l *UserLogic) UnRegister(in *user.IdRequest) (*user.Response, error) {
