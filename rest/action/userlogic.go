@@ -111,14 +111,14 @@ func (l *UserAction[T]) Logout() (resp *base.Response, err error) {
 }
 
 func (l *UserAction[T]) UserInfo() (resp *base.Response, err error) {
-	userId := l.ctx.Value("userId").(string)
+	userId := l.ctx.Value("userId")
 	if l.svcCtx.Config.GetServiceType() == ctx.RpcClient { //实现rpc通讯
 		userRpcService, ok := l.svcCtx.Services["user"].Service.(userclient.UserService)
 		if !ok {
 			logx.Error("未注册用户服务模块！")
 		}
 		userInfo, _ := userRpcService.UserInfo(l.ctx, &user.IdRequest{
-			Id: userId,
+			Id: fmt.Sprint(userId),
 		})
 		result, _ := jsonhelper.GetJsonObject([]byte(userInfo.Result))
 		return &base.Response{
