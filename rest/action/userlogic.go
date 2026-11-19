@@ -100,11 +100,9 @@ func (l *UserAction[T]) Login(req *types.LoginRequest) (resp *base.Response, err
 
 func (l *UserAction[T]) Logout() (resp *base.Response, err error) {
 	//我们只需要在redis登出即可
-	userId := l.ctx.Value("userId")
+	userName := l.ctx.Value("userName")
 	token := l.ctx.Value("token")
-	svr := business.NewUserService(l.svcCtx.Config.GetDbConfig())
-	userInfo, err := svr.GetUserInfo(userId)
-	message := fmt.Sprintf("用户[%s]退出登录！！！", userInfo.Rows[0]["userName"].(string))
+	message := fmt.Sprintf("用户[%s]退出登录！！！", userName)
 	l.svcCtx.RedisClient.Del(token.(string))
 	return &base.Response{
 		Code:    "0",
