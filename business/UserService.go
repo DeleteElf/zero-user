@@ -44,7 +44,7 @@ func (s *UserService) Login(account, telephone, email, pwd string) ([]entities.U
 }
 
 func (s *UserService) BuildToken(userInfo entities.UserInfo, tokenReplaceTime int64) (token, value string, err error) {
-	tokenValue := jsonhelper.JsonObject{"id": userInfo.Id, "name": userInfo.UserName} //根据需要写入value，也可以是复杂的数据
+	tokenValue := jsonhelper.JsonObject{"id": userInfo.Id, "userName": userInfo.UserName} //根据需要写入value，也可以是复杂的数据
 	value, err = jsonhelper.ToJsonString(tokenValue)
 	if err != nil {
 		return "", "", err
