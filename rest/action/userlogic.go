@@ -125,7 +125,7 @@ func (l *UserAction[T]) UserInfo() (resp *base.Response, err error) {
 		userInfo, _ := userRpcService.UserInfo(l.ctx, &user.IdRequest{
 			Id: userId,
 		})
-		result, _ := jsonhelper.GetJsonObject(userInfo.Result.([]byte))
+		result, _ := jsonhelper.GetJsonObject([]byte(userInfo.Result))
 		return &base.Response{
 			Code:    userInfo.Code,
 			Message: userInfo.Message,
