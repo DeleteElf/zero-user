@@ -3,10 +3,8 @@ package action
 import (
 	"context"
 	"fmt"
-	"strconv"
 
 	"github.com/DeleteElf/zero-core/entities"
-	"github.com/DeleteElf/zero-core/utils/httphelper"
 	"github.com/DeleteElf/zero-core/utils/jsonhelper"
 	"github.com/DeleteElf/zero-user/business"
 	"github.com/DeleteElf/zero-user/client/rpc/userclient"
@@ -61,8 +59,7 @@ func (l *UserAction[T]) Login(req *types.LoginRequest) (resp *base.Response, err
 		}, nil
 	}
 	//登录成功，生成token
-	tokenValue := strconv.Itoa(userInfo[0].Id) //根据需要写入value，也可以是复杂的数据
-	token, err := httphelper.BuildJwtToken(tokenValue, l.svcCtx.Config.GetTokenReplaceTime(), 0)
+	token, tokenValue, err := svr.BuildToken(userInfo[0], l.svcCtx.Config.GetTokenReplaceTime())
 	//登录成功，写入redis，同时需要在中间件对这个信息进行续约
 	err1 := l.svcCtx.RedisClient.Setex(token, tokenValue, l.svcCtx.Config.GetSessionTime()) //有效期30分钟
 	if err1 != nil {

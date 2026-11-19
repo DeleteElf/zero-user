@@ -3,6 +3,8 @@ package business
 import (
 	"github.com/DeleteElf/zero-core/ado"
 	"github.com/DeleteElf/zero-core/entities"
+	"github.com/DeleteElf/zero-core/utils/httphelper"
+	"github.com/DeleteElf/zero-core/utils/jsonhelper"
 	"github.com/DeleteElf/zero-core/utils/stringhelper"
 	"github.com/DeleteElf/zero-web-core/svr"
 )
@@ -39,4 +41,14 @@ func (s *UserService) Login(account, telephone, email, pwd string) ([]entities.U
 	dbCon.SelectByCondition(&userInfo, "(f_account=? or f_telephone=? or f_email=?) and f_password=? and f_active",
 		account, telephone, email, stringhelper.Md5(pwd))
 	return userInfo, nil
+}
+
+func (s *UserService) BuildToken(userInfo entities.UserInfo, tokenReplaceTime int64) (token, value string, err error) {
+	tokenValue := jsonhelper.JsonObject{"id": userInfo.Id, "name": userInfo.UserName} //根据需要写入value，也可以是复杂的数据
+	value, err = jsonhelper.ToJsonString(tokenValue)
+	if err != nil {
+		return "", "", err
+	}
+	token, err = httphelper.BuildJwtToken(tokenValue, tokenReplaceTime, 0)
+	return token, value, err
 }
