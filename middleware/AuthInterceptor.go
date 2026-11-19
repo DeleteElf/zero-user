@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/deleteelf/zero-core/utils/httphelper"
+	"github.com/DeleteElf/zero-core/utils/httphelper"
 	"github.com/zeromicro/go-zero/core/stores/redis"
 )
 
