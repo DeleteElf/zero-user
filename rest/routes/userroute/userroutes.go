@@ -83,7 +83,7 @@ func LoginHandler[T ctx.Config](svcCtx *ctx.ServiceContext[T]) http.HandlerFunc 
 			httpx.ErrorCtx(r.Context(), w, errors.New("密码不能为空"))
 			return
 		}
-		l := action.NewUserAction(r.Context(), svcCtx)
+		l := control.NewUserAction(r.Context(), svcCtx)
 		resp, err := l.Login(&req)
 		if err != nil {
 			httpx.ErrorCtx(r.Context(), w, err)
@@ -96,7 +96,7 @@ func LoginHandler[T ctx.Config](svcCtx *ctx.ServiceContext[T]) http.HandlerFunc 
 // 登出
 func LogoutHandler[T ctx.Config](svcCtx *ctx.ServiceContext[T]) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		l := action.NewUserAction(r.Context(), svcCtx)
+		l := control.NewUserAction(r.Context(), svcCtx)
 		resp, err := l.Logout()
 		if err != nil {
 			httpx.ErrorCtx(r.Context(), w, err)
@@ -110,7 +110,7 @@ func LogoutHandler[T ctx.Config](svcCtx *ctx.ServiceContext[T]) http.HandlerFunc
 // 获取用户信息
 func UserInfoHandler[T ctx.Config](svcCtx *ctx.ServiceContext[T]) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		l := action.NewUserAction(r.Context(), svcCtx)
+		l := control.NewUserAction(r.Context(), svcCtx)
 		resp, err := l.UserInfo()
 		if err != nil {
 			httpx.ErrorCtx(r.Context(), w, err)
@@ -144,7 +144,7 @@ func ChangePwdHandler[T ctx.Config](svcCtx *ctx.ServiceContext[T]) http.HandlerF
 			httpx.ErrorCtx(r.Context(), w, errors.New("确认新密码与新密码不一致"))
 			return
 		}
-		l := action.NewUserAction(r.Context(), svcCtx)
+		l := control.NewUserAction(r.Context(), svcCtx)
 		resp, err := l.ChangePwd(&req)
 		if err != nil {
 			httpx.ErrorCtx(r.Context(), w, err)

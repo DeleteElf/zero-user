@@ -43,7 +43,7 @@ func CharacterInfoHandler[T ctx.Config](svcCtx *ctx.ServiceContext[T]) http.Hand
 			return
 		}
 
-		l := action.NewCharacterLogic(r.Context(), svcCtx)
+		l := control.NewCharacterLogic(r.Context(), svcCtx)
 		resp, err := l.Info(&req)
 		if err != nil {
 			httpx.ErrorCtx(r.Context(), w, err)

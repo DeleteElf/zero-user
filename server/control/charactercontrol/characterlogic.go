@@ -1,4 +1,4 @@
-package characteraction
+package charactercontrol
 
 import (
 	"context"
