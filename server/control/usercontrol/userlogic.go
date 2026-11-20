@@ -1,4 +1,4 @@
-package useracontrol
+package usercontrol
 
 import (
 	"context"

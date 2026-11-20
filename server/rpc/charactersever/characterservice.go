@@ -8,7 +8,7 @@ import (
 	"context"
 
 	"github.com/DeleteElf/zero-user/rpchandles/character"
-	"github.com/DeleteElf/zero-user/server/action/characteraction"
+	"github.com/DeleteElf/zero-user/server/control/charactercontrol"
 	"github.com/DeleteElf/zero-web-core/ctx"
 )
 
@@ -24,6 +24,6 @@ func NewCharacterService(svcCtx *ctx.ServiceContext[ctx.RpcServerConf]) *Charact
 }
 
 func (s *CharacterService) CharacterInfo(ctx context.Context, in *character.IdRequest) (*character.Response, error) {
-	l := characteraction.NewCharacterLogic(ctx, s.svcCtx)
+	l := charactercontrol.NewCharacterLogic(ctx, s.svcCtx)
 	return l.Info(in)
 }

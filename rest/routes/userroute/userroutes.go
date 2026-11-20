@@ -10,7 +10,7 @@ import (
 	"slices"
 	"time"
 
-	"github.com/DeleteElf/zero-user/rest/action"
+	"github.com/DeleteElf/zero-user/rest/control"
 	"github.com/DeleteElf/zero-user/types"
 	"github.com/DeleteElf/zero-web-core/ctx"
 	"github.com/zeromicro/go-zero/rest"
